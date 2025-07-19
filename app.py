@@ -1,16 +1,28 @@
 import os
 import requests
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 
 # Setup Flask App
 app = Flask(__name__)
-# --- FINAL FIX: Explicitly allow your Render frontend URL ---
-CORS(app, origins=["https://resume-frontend-k6zm.onrender.com"])
+
+# --- FINAL FIX: Manually add the permission headers after each request ---
+@app.after_request
+def after_request(response):
+    # This line explicitly allows your frontend to make requests.
+    response.headers.add('Access-Control-Allow-Origin', 'https://resume-frontend-k6zm.onrender.com')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
+    return response
 
 # This is now the ONLY job of the backend
-@app.route('/format-resume-ai', methods=['POST'])
+@app.route('/format-resume-ai', methods=['POST', 'OPTIONS'])
 def format_resume_with_ai():
+    # The browser sends an 'OPTIONS' request first to check permissions.
+    # We need to respond to it with a success code (200).
+    if request.method == 'OPTIONS':
+        return jsonify({'status': 'ok'}), 200
+
+    # If it's not an OPTIONS request, it's the real 'POST' request.
     try:
         data = request.get_json()
         if not data or 'cleanedText' not in data:
