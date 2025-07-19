@@ -6,10 +6,10 @@ from flask import Flask, request, jsonify
 app = Flask(__name__)
 
 # This decorator attaches the required headers to EVERY response from the server.
-# This is the most reliable way to handle CORS permissions.
 @app.after_request
 def after_request(response):
-    response.headers.set('Access-Control-Allow-Origin', 'https://resume-frontend-k6zm.onrender.com')
+    # This is the final fix: The '*' wildcard allows ANY website to connect.
+    response.headers.set('Access-Control-Allow-Origin', '*')
     response.headers.set('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
     return response
@@ -20,7 +20,6 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 # The REAL AI Formatting Endpoint
-# We no longer need to handle 'OPTIONS' here, as @after_request does it for us.
 @app.route('/format-resume-ai', methods=['POST'])
 def format_resume_with_ai():
     try:
