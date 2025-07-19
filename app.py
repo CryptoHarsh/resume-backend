@@ -5,8 +5,8 @@ from flask_cors import CORS
 
 # Setup Flask App
 app = Flask(__name__)
-# Allows your frontend to talk to your backend
-CORS(app) 
+# --- FINAL FIX: Explicitly allow your Render frontend URL ---
+CORS(app, origins=["https://resume-frontend-k6zm.onrender.com"])
 
 # This is now the ONLY job of the backend
 @app.route('/format-resume-ai', methods=['POST'])
@@ -51,4 +51,3 @@ You are an expert-level resume parser and formatter...
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         return jsonify({"error": "An internal server error occurred."}), 500
-
