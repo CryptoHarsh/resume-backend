@@ -1,7 +1,8 @@
 services:
   - type: web
-    name: my-resume-api # <-- CHANGE THIS to your service name on Render
+    name: my-resume-api # <-- IMPORTANT: Change this to your service name on Render
     env: python
+    pythonVersion: "3.11" # Specifies a stable Python version
     plan: free
     build:
       packages:
@@ -11,4 +12,4 @@ services:
     startCommand: "gunicorn app:app"
     envVars:
       - key: GEMINI_API_KEY
-        sync: false
+        sync: false # Tells Render to use the value from the dashboard
