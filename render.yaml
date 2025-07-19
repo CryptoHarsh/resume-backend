@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: my-resume-api # <-- CHANGE THIS to your service name on Render
+    env: python
+    plan: free
+    build:
+      packages:
+        - libxml2-dev
+        - libxslt-dev
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn app:app"
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
