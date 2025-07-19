@@ -8,8 +8,7 @@ app = Flask(__name__)
 # --- Manually add the permission headers after each request ---
 @app.after_request
 def after_request(response):
-    # This line explicitly allows your frontend to make requests.
-    # IMPORTANT: Make sure this URL matches your frontend URL on Render exactly.
+    # THIS IS THE FIX: The URL now correctly points to your frontend service.
     response.headers.add('Access-Control-Allow-Origin', 'https://resume-frontend-k6zm.onrender.com')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,POST,OPTIONS')
@@ -24,7 +23,6 @@ def health_check():
 @app.route('/format-resume-ai', methods=['POST', 'OPTIONS'])
 def format_resume_with_ai():
     # The browser sends an 'OPTIONS' request first to check permissions.
-    # We need to respond to it with a success code (200).
     if request.method == 'OPTIONS':
         return jsonify({'status': 'ok'}), 200
 
